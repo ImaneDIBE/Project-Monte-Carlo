@@ -1,5 +1,5 @@
 streamlit
-matplotlib
+pip install matplotlib
 numpy
 pandas
 scipy
