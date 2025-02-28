@@ -195,7 +195,7 @@ def section_evaluation_options():
         else:
 
             # Calcul des rendements log-normaux pour estimer la volatilité historique
-            returns = np.log(data['Close'] / data['Close'].shift(1))
+            returns = np.log(data['Close'] / data['Close'].shift(1)).dropna()
             sigma = returns.std() * np.sqrt(252)  # Volatilité historique annualisée
             S = data['Close'].iloc[-1]  # Prix actuel de l'actif sous-jacent
 
