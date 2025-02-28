@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#FF0000"  # Rouge pour le menu et les boutons
+backgroundColor = "#D3D3D3"  # Gris clair pour l'arrière-plan de la page
+secondaryBackgroundColor = "#FF0000"  # Rouge pour la barre latérale
+textColor = "white"  # Texte blanc
+font = "sans serif"  # Optionnel: personnalisation de la police
