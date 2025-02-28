@@ -1,10 +1,40 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+sys.path.append("D:\\Lib\\site-packages")
 import yfinance as yf
 from scipy.stats import norm
+from streamlit_option_menu import option_menu
 
-st.title('Monte carlo')
+
+
+def section_acceuil():
+    st.header('Bienvenue dans mon projet de simulation avec Monte Carlo')
+    
+    # Description du projet
+    st.write("""
+    Dans ce projet, nous avons travaillé sur des simulations utilisant la méthode de Monte Carlo. 
+    Nous avons traité plusieurs aspects de la simulation stochastique, notamment la simulation de lois normales et de mouvements browniens (standard, géométrique, et arithmétique). 
+    Ces simulations sont particulièrement utiles pour comprendre les comportements aléatoires dans divers contextes, y compris les marchés financiers.
+    """)
+    
+    st.write("""
+    Pour mieux comprendre le travail effectué et les résultats obtenus, vous pouvez télécharger le rapport complet ci-dessous.
+    """)
+
+
+    # Créer un bouton de téléchargement
+    with open("Simulation_monte_carlo_rapport.pdf", "rb") as file:
+        st.download_button(
+            label="Télécharger le rapport",
+            data=file,
+            file_name="Simulation_monte_carlo_rapport.pdf",
+            mime="application/pdf"
+        )
+
+
+
 
 def section_loi_normale():
     st.header('Simulation de la loi normale')
@@ -183,25 +213,42 @@ def section_evaluation_options():
         st.error(f"Une erreur s'est produite lors du téléchargement des données : {str(e)}")
 
 
-# Créer le menu latéral
-st.sidebar.title('Menu')
 
-# Ajouter les liens vers les différentes sections
-section_selected = st.sidebar.radio('Naviguer vers :', 
-                                    ('Loi Normale', 'Mouvement Brownien', 
-                                     'Mouvement Brownien Geometrique', 
-                                     'Mouvement Brownien Arithmetique', 
-                                     'Evaluation des Options'))
+
+# Créer un menu latéral avec des icônes et des rectangles
+with st.sidebar:
+    selected = option_menu(
+        "Menu",  # Titre du menu
+        ["Acceuil", "Loi Normale", "Mouvement Brownien", "Mouvement Brownien Geometrique", "Mouvement Brownien Arithmetique", "Evaluation des Options"],  # Nom des pages
+        icons=["house-door", "bar-chart-line", "bi-circle", "box-arrow-in-up-right", "currency-exchange", "calculator"],  # Icônes des pages
+        menu_icon="cast",  # Icône pour le menu
+        default_index=0,  # Page par défaut
+        styles={
+            "container": {"padding": "5px", "background-color": "#D3D3D3"},
+            "icon": {"color": "#FF0000", "font-size": "20px"},
+            "nav-link": {
+                "font-size": "16px",
+                "text-align": "left",
+                "margin": "5px",
+                "color": "black",
+                "border-radius": "5px",
+                "background-color": "#D3D3D3",
+            },
+            "nav-link-selected": {"background-color": "#FF0000", "color": "white"},
+        },
+    )
+                           
 
 # Appeler la fonction appropriée en fonction de la sélection de l'utilisateur
-if section_selected == 'Loi Normale':
+if selected == 'Acceuil' :
+    section_acceuil()
+elif selected == 'Loi Normale':
     section_loi_normale()
-elif section_selected == 'Mouvement Brownien':
+elif selected == 'Mouvement Brownien':
     section_mouvement_brownien()
-elif section_selected == 'Mouvement Brownien Geometrique':
+elif selected == 'Mouvement Brownien Geometrique':
     section_mouvement_brownien_geometrique()
-elif section_selected == 'Mouvement Brownien Arithmetique':
+elif selected == 'Mouvement Brownien Arithmetique':
     section_mouvement_brownien_arithmetique()
-elif section_selected == 'Evaluation des Options':
+elif selected == 'Evaluation des Options':
     section_evaluation_options()
-
