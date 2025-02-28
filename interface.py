@@ -163,65 +163,58 @@ def section_mouvement_brownien_arithmetique():
         st.pyplot(plt)
 
 
-
-def black_scholes_option_price(S, K, T, r, sigma, option_type):
-    d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
-    d2 = d1 - sigma * np.sqrt(T)
-
-    if option_type.lower() == 'call':
-        option_price = S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
-    elif option_type.lower() == 'put':
-        option_price = K * np.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
-    else:
-        raise ValueError("Le type d'option doit être 'call' ou 'put'.")
-
-    return option_price
-
 def section_evaluation_options():
-    st.header('Évaluation des options européennes')
+    st.header('Evaluation des options européennes')
 
-    option_type = st.selectbox("Sélectionnez le type d'option", ["call", "put"])
-    ticker = st.text_input("Entrez le ticker de l'actif sous-jacent (ex: AAPL)").upper()
+    option_type = st.text_input('Sélectionnez le type de l option (call ou put)')
+    ticker = st.text_input('Sélectionnez le ticker de l option (ex: AAPL)')
     start = st.date_input("Choisissez la date de début")
     end = st.date_input("Choisissez la date de fin")
-    K = st.number_input("Entrez le prix d'exercice de l'option", min_value=0.0, format="%.2f")
-    T = st.number_input("Entrez le temps jusqu'à l'expiration (en années)", min_value=0.01, format="%.2f")
-    r = st.number_input("Entrez le taux d'intérêt sans risque (ex: 0.05 pour 5%)", min_value=0.0, format="%.4f")
+    K = st.number_input('Entrez le prix d exercice de l option')
+    T = st.number_input('Entrez le temps jusqu à l expiration de l option (en années)')
+    r = st.number_input('Entrez le taux d intérêt sans risque')
+
+    def black_scholes_option_price(S, K, T, r, sigma, option_type):
+        d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+        d2 = d1 - sigma * np.sqrt(T)
+
+        if option_type == 'call':
+            option_price = S * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+        elif option_type == 'put':
+            option_price = K * np.exp(-r * T) * norm.cdf(-d2) - S * norm.cdf(-d1)
+        else:
+            raise ValueError("Option type should be 'call' or 'put'.")
+
+        return option_price
 
     try:
-        # Téléchargement des données via Yahoo Finance
-        data = yf.download(ticker, start=start, end=end)
-
+        # Téléchargement des données à partir de Yahoo Finance
+        data = yf.download(ticker, start, end)
         if data.empty or 'Close' not in data:
             st.error("Les données téléchargées sont vides ou invalides. Vérifiez le ticker et les dates.")
-            return
+        else:
 
-        # Calcul des rendements log-normaux pour estimer la volatilité historique
-        returns = np.log(data['Close'] / data['Close'].shift(1)).dropna()
-        sigma = returns.std() * np.sqrt(252)  # Volatilité historique annualisée
-        S = data['Close'].iloc[-1]  # Prix actuel de l'actif sous-jacent
+            # Calcul des rendements log-normaux pour estimer la volatilité historique
+            returns = np.log(data['Close'] / data['Close'].shift(1))
+            sigma = returns.std() * np.sqrt(252)  # Volatilité historique annualisée
+            S = data['Close'].iloc[-1]  # Prix actuel de l'actif sous-jacent
 
-        st.write(f"📊 Prix actuel de {ticker}: **{S:.2f}** USD")
-        st.write(f"📈 Volatilité historique estimée: **{sigma:.2%}**")
+            if st.button(' Afficher le graphe  '):
+               # Générer une plage de prix sous-jacents pour visualiser la relation prix de l'option / prix sous-jacent
+               underlying_prices = np.linspace(S * 0.8, S * 1.2, 100)
+               option_prices = [black_scholes_option_price(price, K, T, r, sigma, option_type) for price in underlying_prices]
 
-        if st.button("Afficher le graphe"):
-            # Générer une plage de prix sous-jacents pour visualiser la relation prix de l'option / prix sous-jacent
-            underlying_prices = np.linspace(S * 0.8, S * 1.2, 100)
-            option_prices = [black_scholes_option_price(price, K, T, r, sigma, option_type) for price in underlying_prices]
-
-            # Affichage du graphique
-            fig, ax = plt.subplots()
-            ax.plot(underlying_prices, option_prices, label="Prix de l'option européenne", color="blue")
-            ax.axvline(x=S, color='r', linestyle='--', label='Prix actuel de l\'actif sous-jacent')
-            ax.set_xlabel("Prix de l'actif sous-jacent")
-            ax.set_ylabel("Prix de l'option")
-            ax.set_title("Prix de l'option selon le modèle Black-Scholes")
-            ax.legend()
-            st.pyplot(fig)
+               # Visualisation
+               plt.plot(underlying_prices, option_prices, label="Prix de l'option européenne")
+               plt.axvline(x=S, color='r', linestyle='--', label='Prix actuel de l actif sous-jacent')
+               plt.xlabel('Prix de l actif sous-jacent')
+               plt.ylabel('Prix de l option')
+               plt.title('Prix de l option européenne selon le modèle Black-Scholes')
+               plt.legend()
+               st.pyplot(plt)
 
     except Exception as e:
-        st.error(f"Une erreur s'est produite : {str(e)}")
-
+        st.error(f"Une erreur s'est produite lors du téléchargement des données : {str(e)}")
 
 
 # Créer un menu latéral avec des icônes et des rectangles
