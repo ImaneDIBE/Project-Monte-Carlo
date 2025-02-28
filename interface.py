@@ -224,7 +224,7 @@ with st.sidebar:
         menu_icon="cast",  # Icône pour le menu
         default_index=0,  # Page par défaut
         styles={
-            "container": {"padding": "5px", "background-color": "#8f8787"},  # Gris personnalisé
+            "container": {"padding": "5px", "background-color": "#ffb6b6"},  # Nouveau rose clair
             "icon": {"color": "#ff5c5c", "font-size": "20px"},  # Rouge personnalisé
             "nav-link": {
                 "font-size": "16px",
@@ -232,11 +232,12 @@ with st.sidebar:
                 "margin": "5px",
                 "color": "black",  # Texte noir
                 "border-radius": "5px",
-                "background-color": "#8f8787",
+                "background-color": "#ffb6b6",  # Nouveau rose clair
             },
             "nav-link-selected": {"background-color": "#ff5c5c", "color": "white"},
         },
     )
+
              
 
 # Appeler la fonction appropriée en fonction de la sélection de l'utilisateur
