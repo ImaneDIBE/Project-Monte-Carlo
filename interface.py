@@ -25,11 +25,11 @@ def section_acceuil():
 
 
     # Créer un bouton de téléchargement
-    with open("Simulation_monte_carlo.pdf", "rb") as file:
+    with open("Simulation_monte_carlo_rapport.pdf", "rb") as file:
         st.download_button(
             label="Télécharger le rapport",
             data=file,
-            file_name="Simulation_monte_carlo.pdf",
+            file_name="Simulation_monte_carlo_rapport.pdf",
             mime="application/pdf"
         )
 
