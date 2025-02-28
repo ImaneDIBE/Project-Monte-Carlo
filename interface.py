@@ -23,15 +23,13 @@ def section_acceuil():
     Pour mieux comprendre le travail effectué et les résultats obtenus, vous pouvez télécharger le rapport complet ci-dessous.
     """)
 
-    # Chemin du rapport
-    rapport_path = "D:\\rapport (2).pdf"
 
     # Créer un bouton de téléchargement
-    with open(rapport_path, "rb") as file:
+    with open("Simulation_monte_carlo_rapport.pdf", "rb") as file:
         st.download_button(
             label="Télécharger le rapport",
             data=file,
-            file_name="rapport (2).pdf",
+            file_name="Simulation_monte_carlo_rapport.pdf",
             mime="application/pdf"
         )
 
